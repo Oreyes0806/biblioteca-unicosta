@@ -1,15 +1,44 @@
+import { useEffect, useState } from 'react';
+import useFirebaseAuth from '../../firebase/useFirebaseAuth';
 import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useNavigate } from 'react-router-dom';
+import { useAlerta } from '../common/alerta/AlertaContext.jsx';
 
 const Registro = () => {
+  const { user, userProfile, error, signUp } = useFirebaseAuth();
+  const { mostrarAlerta } = useAlerta();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (error) {
+      mostrarAlerta('Error de registro', error.message);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (user && userProfile) {
+      mostrarAlerta('Sesión', `Bienvenido, ${user.email}`);
+      navigate("/");
+    }
+  }, [user, userProfile]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signUp(email, password);
+  };
+
   return (
     <Container style={{ maxWidth: "fit-content" }}>
       <h3>Llena los campos para completar tu registro</h3>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="dirreccionDeCorreo">
           <Form.Label>Correo Electrónico</Form.Label>
-          <Form.Control type="email" placeholder="tuemail@dominio.com" />
+          <Form.Control type="email" placeholder="tuemail@dominio.com" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Form.Text className="text-muted">
             No compartiremos tu dirección de correo con nadie más {(";)")}
           </Form.Text>
@@ -17,11 +46,10 @@ const Registro = () => {
 
         <Form.Group className="mb-3" controlId="contrasena">
           <Form.Label>Contraseña</Form.Label>
-          <Form.Control type="password" placeholder="************" />
+          <Form.Control type="password" placeholder="************" value={password} onChange={(e) => setPassword(e.target.value)} />
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Registrarse
-        </Button>
+
+        <Button variant="primary" type="submit">Registrarse</Button>
       </Form>
     </Container>
   );

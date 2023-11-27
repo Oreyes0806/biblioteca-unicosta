@@ -1,22 +1,20 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'react-bootstrap';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
+import { useAlerta } from './AlertaContext';
 
-function Alerta({ titulo, mensaje }) {
-  const [show, setShow] = useState(true);
-
-  const toggleShow = () => setShow(!show);
+function Alerta() {
+  const { alerta, ocultarAlerta } = useAlerta();
 
   return (
     <Container fluid>
       <ToastContainer className="position-fixed" style={{ top: 5, right: 5 }} top-end>
-        <Toast show={show} onClose={toggleShow} bg='secondary'>
+        <Toast show={alerta.show} onClose={ocultarAlerta} bg='secondary'>
           <Toast.Header>
-            <strong className="me-auto">{titulo ?? "Alerta"}</strong>
+            <strong className="me-auto">{alerta.titulo || "Alerta"}</strong>
           </Toast.Header>
-          <Toast.Body>{mensaje ?? "Revisar implementación"}</Toast.Body>
+          <Toast.Body>{alerta.mensaje || "Revisar implementación"}</Toast.Body>
         </Toast>
       </ToastContainer>
     </Container>

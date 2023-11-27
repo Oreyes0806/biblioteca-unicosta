@@ -1,11 +1,20 @@
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
+import useFirebaseAuth from '../../../firebase/useFirebaseAuth';
 
-const GrillaLibros = ({ libros }) => {
+const GrillaLibros = ({ libros, prestar }) => {
+  const { user } = useFirebaseAuth();
+
+  const handleClickPrestar = (idLibro) => {
+    if (user) {
+      prestar(idLibro, user.email);
+    }
+  };
+
   return (
     <Row xs={1} md={2} xl={3} className="g-4">
       {libros.map((libro,) => (
@@ -15,13 +24,15 @@ const GrillaLibros = ({ libros }) => {
             <Card.Body>
               <Card.Title>
                 {libro.titulo}
-                {libro.disponible ? (<Badge bg="success" className="ms-2">Success</Badge>) : (<Badge bg="danger" className="ms-2">Danger</Badge>)}
+                {libro.disponible ? (<Badge bg="success" className="ms-2">Disponible</Badge>) : (<Badge bg="danger" className="ms-2">Prestado</Badge>)}
               </Card.Title>
               <Card.Text>
-                {libro.descripcion}
+                <span className='text-body-secondary'>{libro.autor} - </span>
+                <span className='text-body-secondary'>{libro.anio}</span>
+                <p className='text-truncate'>{libro.descripcion}</p>
               </Card.Text>
               <Card.Footer>
-                <Button variant="primary">Prestar</Button>
+                <Button variant="primary" onClick={() => handleClickPrestar(libro.id)}>Prestar</Button>
               </Card.Footer>
             </Card.Body>
           </Card>
@@ -29,20 +40,6 @@ const GrillaLibros = ({ libros }) => {
       ))}
     </Row>
   );
-};
-
-GrillaLibros.propTypes = {
-  libros: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      titulo: PropTypes.string.isRequired,
-      autor: PropTypes.string.isRequired,
-      descripcion: PropTypes.string.isRequired,
-      disponible: PropTypes.bool.isRequired,
-      publicacion: PropTypes.number.isRequired,
-      prestadoPor: PropTypes.string | PropTypes.any,
-    })
-  ).isRequired,
 };
 
 export default GrillaLibros;

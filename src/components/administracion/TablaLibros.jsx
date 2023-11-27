@@ -1,8 +1,7 @@
-import Table from 'react-bootstrap/Table';
-import PropTypes from 'prop-types';
-import Badge from 'react-bootstrap/Badge';
+/* eslint-disable react/prop-types */
+import { Table, Badge, Button } from 'react-bootstrap';
 
-const TablaLibros = ({ libros }) => {
+const TablaLibros = ({ libros, onBookIsSelected, onDeleteBook }) => {
   return (
     <>
       <h3>Libros</h3>
@@ -10,40 +9,35 @@ const TablaLibros = ({ libros }) => {
         <thead>
           <tr>
             <th>#</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Availability</th>
-            <th>Publication Year</th>
+            <th>Titulo</th>
+            <th>Autor</th>
+            <th>Disponibilidad</th>
+            <th>Año</th>
+            <th>Prestado Por</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {libros.map((libro, index) => (
-            <tr key={libro.id}>
-              <td>{index + 1}</td>
-              <td>{libro.titulo}</td>
-              <td>{libro.autor}</td>
-              <td>{libro.disponible ? (<Badge bg="success" className="ms-2">Success</Badge>) : (<Badge bg="danger" className="ms-2">Danger</Badge>)}</td>
-              <td>{libro.publicacion}</td>
-            </tr>
-          ))}
+          {libros ? (
+            libros.map((libro, index) => (
+              <tr key={libro.id} >
+                <td>{index + 1}</td>
+                <td>{libro.titulo}</td>
+                <td>{libro.autor}</td>
+                <td>{libro.disponible ? (<Badge bg="success" className="ms-2">Disponible</Badge>) : (<Badge bg="danger" className="ms-2">Prestado</Badge>)}</td>
+                <td>{libro.anio}</td>
+                <td>{libro.prestadoPor}</td>
+                <td>
+                  <Button type='button' variant='warning' onClick={() => onBookIsSelected(libro)} className='me-1'>Editar</Button>
+                  <Button type='button' variant='danger' onClick={() => onDeleteBook(libro.id)}>Borrar</Button>
+                </td>
+              </tr>
+            ))
+          ) : null}
         </tbody>
       </Table>
     </>
   );
-};
-
-TablaLibros.propTypes = {
-  libros: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      titulo: PropTypes.string.isRequired,
-      autor: PropTypes.string.isRequired,
-      descripcion: PropTypes.string.isRequired,
-      disponible: PropTypes.bool.isRequired,
-      publicacion: PropTypes.string.isRequired,
-      prestadoPor: PropTypes.string | PropTypes.any,
-    })
-  ).isRequired,
 };
 
 export default TablaLibros;
