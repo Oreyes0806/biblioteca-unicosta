@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAlerta } from '../common/alerta/AlertaContext.jsx';
 
 const Registro = () => {
-  const { user, userProfile, error, signUp } = useFirebaseAuth();
+  const { user, error, signUp } = useFirebaseAuth();
   const { mostrarAlerta } = useAlerta();
   const navigate = useNavigate();
 
@@ -18,14 +18,14 @@ const Registro = () => {
     if (error) {
       mostrarAlerta('Error de registro', error.message);
     }
-  }, [error]);
+  }, [error, mostrarAlerta]);
 
   useEffect(() => {
-    if (user && userProfile) {
+    if (user) {
       mostrarAlerta('Sesión', `Bienvenido, ${user.email}`);
       navigate("/");
     }
-  }, [user, userProfile]);
+  }, [mostrarAlerta, navigate, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

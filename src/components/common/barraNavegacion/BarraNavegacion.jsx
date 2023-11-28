@@ -1,12 +1,12 @@
 import Container from 'react-bootstrap/Container';
-import { Row, Col, Nav, Navbar, Button } from 'react-bootstrap';
+import { Nav, Navbar, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import useFirebaseAuth from '../../../firebase/useFirebaseAuth';
 import { useNavigate } from 'react-router-dom';
 import { useAlerta } from '../alerta/AlertaContext.jsx';
 
 const BarraNavegacion = () => {
-  const { user, userProfile, signOut } = useFirebaseAuth();
+  const { user, signOut } = useFirebaseAuth();
   const { mostrarAlerta } = useAlerta();
   const navigate = useNavigate();
 
@@ -31,57 +31,42 @@ const BarraNavegacion = () => {
         </Navbar.Brand>
 
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="">
-              <Link to='' style={{ textDecoration: "none" }}>
-                Home
-              </Link>
-            </Nav.Link>
-            <Nav.Link href="libros" style={{ textDecoration: "none" }}>
-              <Link to='/libros' style={{ textDecoration: "none" }}>
-                Libros
-              </Link>
-            </Nav.Link>
-            <Nav.Link href="admin" style={{ textDecoration: "none" }} >
-              <Link to='/admin' style={{ textDecoration: "none" }}>
-                Admin
-              </Link>
-            </Nav.Link>
+          <Nav className="me-auto flex gap-3">
+            <Link to='' style={{ textDecoration: "none" }}>
+              Home
+            </Link>
+
+            <Link to='/libros' style={{ textDecoration: "none" }} >
+              Libros
+            </Link>
+
+            <Link to='/admin' style={{ textDecoration: "none" }} >
+              Admin
+            </Link>
+
             {!user ? (
-              <Row style={{ width: "fit-content" }}>
-                <Col>
-                  <Nav.Item>
-                    <Button type="button" variant='secondary'>
-                      <Link to='/ingreso' style={{ textDecoration: "none", color: "white" }}>
-                        Ingresar
-                      </Link>
-                    </Button>
-                  </Nav.Item>
-                </Col>
-                <Col>
-                  <Nav.Item>
-                    <Button type="button" variant='secondary'>
-                      <Link to='/registro' style={{ textDecoration: "none", color: "white" }}>
-                        Registrarse
-                      </Link>
-                    </Button>
-                  </Nav.Item>
-                </Col>
-              </Row>
+              <>
+                <Button type="button" variant='secondary'>
+                  <Link to='/ingreso' style={{ textDecoration: "none", color: "white" }}>
+                    Ingresar
+                  </Link>
+                </Button>
+
+                <Button type="button" variant='secondary'>
+                  <Link to='/registro' style={{ textDecoration: "none", color: "white" }}>
+                    Registrarse
+                  </Link>
+                </Button>
+              </>
             ) : (
               <>
-                <Nav.Item>
-                  <h6 className='text-secondary'>{user.email}</h6>
-                </Nav.Item>
-                <Nav.Item>
-                  <Button type="button" variant='secondary' style={{ textDecoration: "none" }} onClick={handleSignOutClick}>
-                    Salir
-                  </Button>
-                </Nav.Item>
+                <h6 className='text-secondary'>{user.email}</h6>
+                <Button type="button" variant='secondary' style={{ textDecoration: "none" }} onClick={handleSignOutClick}>
+                  Salir
+                </Button>
               </>
             )
             }
-
           </Nav>
         </Navbar.Collapse>
 

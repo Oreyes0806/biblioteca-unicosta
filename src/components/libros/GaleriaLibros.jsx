@@ -2,16 +2,13 @@ import GrillaLibros from './components/GrillaLibros';
 import ListaLibros from './components/ListaLibros';
 import useBooks from '../../firebase/useBooks';
 import { useAlerta } from '../common/alerta/AlertaContext';
-import { useNavigate } from 'react-router-dom';
 import useFirebaseAuth from '../../firebase/useFirebaseAuth';
-import { useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 
 const GaleriaLibros = () => {
-  const { books, loading, error, borrowBook, turnBackBook, getBooksBorrowedBy } = useBooks();
-  const { userProfile, user } = useFirebaseAuth();
+  const { books, loading, error, borrowBook, turnBackBook } = useBooks();
+  const { user } = useFirebaseAuth();
   const { mostrarAlerta } = useAlerta();
-  const navigate = useNavigate();
 
   if (error) {
     mostrarAlerta('Error de carga', 'Error cargando los libros');
@@ -28,12 +25,14 @@ const GaleriaLibros = () => {
   return (
     <Row>
       <Col xs={12} lg={9}>
-        <GrillaLibros libros={books.docs.map(book => {
-          return {
-            id: book.id,
-            ...book.data(),
-          };
-        })} prestar={borrowBook} />
+        <GrillaLibros libros={books.docs
+          .filter(book => book.data().disponible === true)
+          .map(book => {
+            return {
+              id: book.id,
+              ...book.data(),
+            };
+          })} prestar={borrowBook} />
       </Col>
       <Col xs={12} lg={3}>
         <ListaLibros libros={books.docs.filter(book => book.data().prestadoPor === user.email).map(book => {

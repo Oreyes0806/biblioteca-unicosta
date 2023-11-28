@@ -71,10 +71,8 @@ const useBooks = () => {
       const bookToUpdateSnapshot = await getDoc(bookDocRef);
       if (!bookToUpdateSnapshot.exists()) return;
       const bookFound = bookToUpdateSnapshot.data();
-      console.log((bookFound.prestadoPor !== "" || bookFound.prestadoPor === undefined || bookFound.prestadoPor === null) || bookFound.disponible === false);
       if ((bookFound.prestadoPor !== "" && bookFound.prestadoPor !== undefined && bookFound.prestadoPor !== null) || bookFound.disponible === false) return;
       const updatedBook = { ...bookFound, prestadoPor: borrowedBy, disponible: false };
-      console.log(updatedBook);
       await updateDoc(bookDocRef, updatedBook);
     } catch (error) {
       console.error('Error borrowing book:', error.message);

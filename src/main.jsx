@@ -12,6 +12,7 @@ import GaleriaLibros from './components/libros/GaleriaLibros.jsx';
 import Ingreso from './components/autenticacion/Ingreso.jsx';
 import Registro from './components/autenticacion/Registro.jsx';
 import AdministracionShell from './components/administracion/AdministracionShell.jsx';
+import Home from './components/common/home/Home.jsx';
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <h1>Home</h1>
+        element: <Home />
       },
       {
         path: "ingreso",
@@ -33,16 +34,6 @@ const router = createBrowserRouter([
       {
         path: "admin",
         element: <AdministracionShell />,
-        children: [
-          {
-            path: "agregarLibro",
-            element: <h1>Add Book</h1>,
-          },
-          {
-            path: "editarLibro/:idLibro",
-            element: <h1>Edit Book</h1>,
-          },
-        ]
       },
       {
         path: "libros",

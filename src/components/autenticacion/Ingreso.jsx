@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAlerta } from '../common/alerta/AlertaContext.jsx';
 
 const Ingreso = () => {
-  const { user, userProfile, signIn } = useFirebaseAuth();
+  const { user, signIn } = useFirebaseAuth();
   const { mostrarAlerta } = useAlerta();
   const navigate = useNavigate();
 
@@ -15,11 +15,11 @@ const Ingreso = () => {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    if (user && userProfile) {
+    if (user) {
       mostrarAlerta('Sesión', `Bienvenido, ${user.email}`);
-      navigate("/");
+      navigate("/libros");
     }
-  }, [user, userProfile]);
+  }, [user]);
 
 
   const handleSubmit = async (e) => {

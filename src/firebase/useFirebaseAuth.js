@@ -1,54 +1,15 @@
-import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, store } from './firebase';
+import { auth } from './firebase';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { useAlerta } from '../components/common/alerta/AlertaContext.jsx';
 
 const useFirebaseAuth = () => {
   const [user, loading, error] = useAuthState(auth);
-  const [userProfile, setUserProfile] = useState();
   const { mostrarAlerta } = useAlerta();
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (user && !userProfile) {
-        let userProfileMock;
-        try {
-          userProfileMock = await tryGetUserProfile();
-          if (!userProfileMock) {
-            userProfileMock = await tryAddUserProfile();
-          }
-          setUserProfile(userProfileMock);
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
-          mostrarAlerta('Error fetching user profile:', error.toString());
-        }
-      }
-
-      async function tryAddUserProfile() {
-        const userProfile = { email: user.email, role: 'user' };
-        const usersCollection = collection(store, 'usuarios');
-        await addDoc(usersCollection, userProfile);
-        return userProfile;
-      }
-
-      async function tryGetUserProfile() {
-        const usersCollection = collection(store, 'usuarios');
-        let userProfileQuery = query(usersCollection);
-        userProfileQuery = query(userProfileQuery, where("email", '==', user.email));
-        const userProfileSnapshot = await getDocs(userProfileQuery);
-        if (!userProfileSnapshot.docs[0]) return null;
-        const userProfile = userProfileSnapshot.docs[0].data();
-        return userProfile;
-      }
-    };
-
-    fetchUserProfile();
-  }, [user, setUserProfile, userProfile]);
 
   const signIn = async (email, password) => {
     try {
@@ -76,7 +37,6 @@ const useFirebaseAuth = () => {
     user,
     loading,
     error,
-    userProfile,
     signIn,
     signUp,
     signOut,

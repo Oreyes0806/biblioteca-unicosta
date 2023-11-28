@@ -23,12 +23,13 @@ const AdministracionShell = () => {
   return (
     <Row>
       <Col xs={12} lg={6}>
-        <TablaLibros libros={books.docs.map(book => {
-          return {
-            id: book.id,
-            ...book.data(),
-          };
-        })} onBookIsSelected={selectBookToEdit} onDeleteBook={deleteBook} />
+        <TablaLibros libros={books.docs
+          .map(book => {
+            return {
+              id: book.id,
+              ...book.data(),
+            };
+          })} onBookIsSelected={selectBookToEdit} onDeleteBook={deleteBook} />
       </Col>
       <Col xs={12} lg={6}>
         <FormularioLibro libroAEditar={bookToEdit} addBook={addBook} editBook={updateBook} cancelEditBook={unSelectBookToEdit} />
